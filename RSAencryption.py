@@ -38,12 +38,9 @@ def encrypt(pub_key,n_text):
     encrypted =[]
     m=0
     for i in n_text:
-        if(i.isspace()):
-            encrypted.append(400) # 400 means a space
-        else:
-            m = ord(i)
-            c = (m ** e) % n
-            encrypted.append(c)
+        m = ord(i)
+        c = (m ** e) % n
+        encrypted.append(c)
     return encrypted
 
 #Decryption
@@ -52,13 +49,11 @@ def decrypt(priv_key,c_text):
     originalMSG = ''
     m=0
     for i in c_text:
-        if(i == 400):
-            originalMSG += ' '
-        else:
-            m = (i ** d) % n #ascII
-            ch = chr(m) #itoa
-            originalMSG += ch
+        m = (i ** d) % n #ascII
+        ch = chr(m) #itoa
+        originalMSG += ch
     return originalMSG
+
 
 if __name__ == '__main__':
     #Gather Prime Numbers
