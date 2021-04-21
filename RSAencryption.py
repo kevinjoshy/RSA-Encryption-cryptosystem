@@ -189,15 +189,3 @@ int main(int argc,char* argv[]) {
 }
 
 '''
-
-def powerFast(x, exponent, mod): 
-    power = 50
-    total = mod // power
-    remainder = mod % power
-
-    value = 0
-    for i in range(total):
-        value *= (x ** power) % mod
-    value *= (x ** remainder) % mod
-
-    return (value % mod)
