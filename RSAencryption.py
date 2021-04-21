@@ -1,3 +1,14 @@
+#Python cracking n code
+def findPQ(n):
+    stop = int(n ** 0.5) + 1
+    print(stop)
+    for i in range(3,stop,2):
+        if (n%i == 0):
+            p = i
+            q = n/p
+            return p,q
+    return None
+
 # Returns True for prime n
 def prime_check(n):
     if(n==2):
@@ -28,30 +39,48 @@ def eea(a,b):
 #Multiplicative Inverse, d such that 1 = (d*e) % r -> d is multiplicative inverse of e with respect to r
 def mult_inv(e,r):
     gcd,t,s = eea(e,r)
-    if(gcd != 1): # Guarenteed to be 1 in this code
+    if(gcd != 1): # Guarenteed gcd = 1 b/c of how it is used in this file
         return None
     return t%r
 
+#Computing Power Fast
+def powerFast(x, exponent, mod): 
+    power = 50
+    total = exponent // power
+    remainder = exponent % power
+
+    value = 1
+    for i in range(total):
+        value *= ((x ** power) % mod)
+        value = value % mod
+    value *= (x ** remainder) % mod
+
+    return (value % mod)
+
 #Encryption
 def encrypt(pub_key,n_text):
-    e,n=pub_key
+    e,n = pub_key
     encrypted =[]
     m=0
     for i in n_text:
         m = ord(i)
-        c = (m ** e) % n
+        # c = (m ** e) % n
+        c = powerFast(m, e, n)
         encrypted.append(c)
     return encrypted
 
 #Decryption
 def decrypt(priv_key,c_text):
+    # print("Got here 1")
     d,n = priv_key
     originalMSG = ''
-    m=0
+    m = 0
     for i in c_text:
-        m = (i ** d) % n #ascII
-        ch = chr(m) #itoa
+        # m = (i ** d) % n #ascII
+        m = powerFast(i, d, n)
+        ch = chr(m)      #itoa
         originalMSG += ch
+    # print("Got here!!!")
     return originalMSG
 
 
@@ -127,3 +156,48 @@ if __name__ == '__main__':
         else:
             print(" ERROR\nShould Never Get Here!!")
             print("\n** ERR In RSA SIM **\n\n")
+
+
+#C cracking n code
+# compile with -lm  ## This is for including math.h
+'''
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
+
+int main(int argc,char* argv[]) {
+    if (argc < 2)
+        return -1;//Usage time ./time n
+
+    long long int n = atoll(argv[1]);
+
+    long long int stop = (long long int)(sqrt((long double)n)) + 1;
+    long int p,q;
+    for (int i=3; i<= stop; i+=2) {
+        if (n%i == 0) {
+            p = i;
+            q = n/p;
+            printf("P: %ld, Q: %ld\n",p,q);
+            return 1;
+        }
+    }
+        
+    return 0;
+}
+
+'''
+
+def powerFast(x, exponent, mod): 
+    power = 50
+    total = mod // power
+    remainder = mod % power
+
+    value = 0
+    for i in range(total):
+        value *= (x ** power) % mod
+    value *= (x ** remainder) % mod
+
+    return (value % mod)
